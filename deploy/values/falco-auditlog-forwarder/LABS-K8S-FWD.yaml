@@ -1,0 +1,16 @@
+name: eks-cloudwatch
+
+deployment:
+  image: sysdiglabs/k8sauditlogforwarder
+  tag: ekscloudwatch-0.2
+  replicas: 1
+
+configmap:
+  # This endpoint refers to falco webserver thats run on 8765 port.
+  # The name of endpoint needs to match with name of falco service
+  # If falco-security did not deployed on cluster this endpoint will not work propely. 
+  endpoint: "http://falco-security.falco-security.svc.cluster.local:8765/k8s-audit"
+  cluster_name: "eks-eks-demo"
+
+serviceaccount:
+  eks_role_arn: "arn:aws:iam::507438040998:role/ekscloudwatch-eks-cw-role"

@@ -1,0 +1,75 @@
+serviceMonitor:
+  # Enable the deployment of a Service Monitor for the Prometheus Operator.
+  enabled: true
+
+prometheusRules:
+  enabled: true
+  additionalLabels:
+    area: "devops-algouma-coisa"
+  alerts:
+    warning:
+      enabled: false
+      rate_interval: "5m"
+      threshold: 0
+    error:
+      enabled: false
+      rate_interval: "5m"
+      threshold: 0
+    critical:
+      enabled: false
+      rate_interval: "5m"
+      threshold: 0
+    alert:
+      enabled: false
+      rate_interval: "5m"
+      threshold: 0
+    emergency:
+      enabled: false
+      rate_interval: "1m"
+      threshold: 0
+  additionalAlerts: |
+    - alert: FalcoWarningEventsRateHigh
+      annotations:
+        summary: Falco is experiencing high rate of warning events
+        description: A high rate of warning events are being detected by Falco
+      expr: rate(falco_events{priority="4"}[1m]) > 0
+      for: 5m
+      labels:
+        severity: warning
+        area: devops-security-falco
+    - alert: FalcoErrorEventsRateHigh
+      annotations:
+        summary: Falco is experiencing high rate of error events
+        description: A high rate of error events are being detected by Falco
+      expr: rate(falco_events{priority="3"}[1m]) > 0
+      for: 1m
+      labels:
+        severity: warning
+        area: devops-security-falco
+    - alert: FalcoCriticalEventsRateHigh
+      annotations:
+        summary: Falco is experiencing high rate of critical events
+        description: A high rate of critical events are being detected by Falco
+      expr: falco_events{priority="2"} > 0
+      for: 1m
+      labels:
+        severity: critical
+        area: devops-security-falco
+    - alert: FalcoAlertEventsRateHigh
+      annotations:
+        summary: Falco is experiencing high rate of alert events
+        description: A high rate of alert events are being detected by Falco
+      expr: falco_events{priority="1"} > 0
+      for: 1m
+      labels:
+        severity: critical
+        area: devops-security-falco
+    - alert: FalcoEmergencyEventsRateHigh
+      annotations:
+        summary: Falco is experiencing high rate of emergency events
+        description: A high rate of emergency events are being detected by Falco
+      expr: falco_events{priority="0"} > 0
+      for: 1m
+      labels:
+        severity: critical
+        area: devops-security-falco

@@ -1,0 +1,39 @@
+name: Security Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+  pull-requests: read
+  push: read
+
+jobs:
+  security-fs:
+    uses: igordevopslabs/custom-workflows-actions/.github/workflows/trivy-fs-scan.yml@main
+    with:
+      application_name: falco-security
+      skipp_file: gitleaks-report.sarif
+    secrets: inherit
+
+  security-iac:
+    needs: [security-fs]
+    uses: igordevopslabs/custom-workflows-actions/.github/workflows/trivy-iac-scan.yml@main
+    with:
+      application_name: falco-security
+    secrets: inherit
+
+  helm-validate:
+    needs: [security-fs, security-iac]
+    uses: igordevopslabs/custom-workflows-actions/.github/workflows/helmchart-test.yml@main
+    with:
+      application_name: falco-security
+      env: labs
+    secrets: inherit

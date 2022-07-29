@@ -1,0 +1,48 @@
+---
+repositories:
+  - name: falco
+    url: https://falcosecurity.github.io/charts
+
+  - name: falco-exporter
+    url: https://falcosecurity.github.io/charts
+
+helmDefaults:
+  createNamespace: true
+  tillerless: true
+  wait: true
+  timeout: 900
+  atomic: true
+
+releases:
+  - name: falco-security
+    chart: falco/falco
+    namespace: falco-security
+    version: "1.17.4"
+    values: 
+      - values/falco/values.yaml.gotmpl
+    installed: true
+    labels:                                # Arbitrary key value pairs for filtering releases
+      role: test
+
+  - name: falco-security-exporter
+    chart: falco-exporter/falco-exporter
+    namespace: falco-security
+    values: 
+      - values/falco-exporter/values.yaml.gotmpl
+    installed: false
+    labels:                                # Arbitrary key value pairs for filtering releases
+      role: test
+
+  - name: k8s-auditlog-forwarder
+    chart: ./k8s-auditlog-forwarder
+    namespace: falco-security
+    values:
+      - values/falco-auditlog-forwarder/values.yaml.gotmpl
+    installed: false
+
+environments:
+  labs:
+    values:
+      - values/falco/LABS.yaml
+      - values/falco/LABS-RULES.yaml
+      - values/falco-auditlog-forwarder/LABS-K8S-FWD.yaml
