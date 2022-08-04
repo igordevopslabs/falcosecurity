@@ -34,7 +34,6 @@ releases:
     labels:                                # Arbitrary key value pairs for filtering releases
       role: test
 
-
   - name: falco-talon
     chart: ./falco-talon
     version: "0.0.1"
@@ -48,4 +47,3 @@ environments:
     values:
       - values/falco/LABS.yaml
       - values/falco/LABS-RULES.yaml
-      - values/falco-talon/LABS-FALCO-TALON.yaml

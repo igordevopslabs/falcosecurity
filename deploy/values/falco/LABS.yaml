@@ -307,9 +307,9 @@ falcosidekick:
 
   webui:
     # -- enable Falcosidekick-UI
-    enabled: true
+    enabled: false
     # -- number of running pods
-    replicaCount: 2
+    replicaCount: 1
     image:
       # -- The web UI image registry to pull from
       registry: docker.io
