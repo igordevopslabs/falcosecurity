@@ -300,6 +300,162 @@ falcosidekick:
   fullfqdn: false
   # -- Listen port. Default value: 2801
   listenPort: ""
+  
+  config:
+    webhook:
+      address: http://falco-talon.falco-security.svc.cluster.local:2803
+
+  webui:
+    # -- enable Falcosidekick-UI
+    enabled: true
+    # -- number of running pods
+    replicaCount: 2
+    image:
+      # -- The web UI image registry to pull from
+      registry: docker.io
+      # -- The web UI image repository to pull from
+      repository: falcosecurity/falcosidekick-ui
+      # -- The web UI image tag to pull
+      tag: "v2.0.2"
+      # -- The web UI image pull policy
+      pullPolicy: IfNotPresent
+
+    # -- Web UI pod securityContext
+    podSecurityContext:
+      runAsUser: 1234
+      fsGroup: 1234
+
+    # -- Web UI container securityContext
+    securityContext: {}
+
+    # -- Name of the priority class to be used by the Web UI pods, priority class needs to be created beforehand
+    priorityClassName: ""
+
+    # -- additions labels on the pods web UI
+    podLabels: {}
+    # -- additions annotations on the pods web UI
+    podAnnotations: {}
+
+    service:
+      # -- The web UI service type
+      type: ClusterIP
+      # -- The web UI service port dor the falcosidekick-ui
+      port: 2802
+      # -- The web UI service nodePort
+      nodePort: 30282
+      # -- The web UI service targetPort
+      targetPort: 2802
+      # -- The web UI service annotations (use this to set a internal LB, for example.)
+      annotations: {}
+      # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+
+    ingress:
+      # -- Whether to create the Web UI ingress
+      enabled: false
+      # --  Web UI ingress annotations
+      annotations: {}
+        # kubernetes.io/ingress.class: nginx
+        # kubernetes.io/tls-acme: "true"
+      # --  Web UI ingress hosts configuration
+      hosts:
+        - host: falcosidekick-ui.local
+          paths:
+          - path: /
+      # --  Web UI ingress TLS configuration
+      tls: []
+      #  - secretName: chart-example-tls
+      #    hosts:
+      #      - chart-example.local
+    # --  The resources for the web UI pods
+    resources: {}
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
+    # -- Web UI nodeSelector field
+    nodeSelector: {}
+    # -- Tolerations for pod assignment
+    tolerations: []
+    # -- Affinity for the Web UI pods
+    affinity: {}
+    externalRedis:
+      # -- Enable or disable the usage of an external Redis. Is mutually exclusive with webui.redis.enabled.
+      enabled: false
+      # -- The URL of the external Redis database with RediSearch > v2
+      url: ""
+      # --  The port of the external Redis database with RediSearch > v2
+      port: 6379
+    redis:
+      # -- Is mutually exclusive with webui.externalRedis.enabled
+      enabled: true
+      image:
+        # -- The web UI Redis image registry to pull from
+        registry: docker.io
+        # -- The web UI Redis image repository to pull from
+        repository: redislabs/redisearch
+        # -- The web UI Redis image tag to pull from
+        tag: "2.2.4"
+        # -- The web UI image pull policy
+        pullPolicy: IfNotPresent
+
+      # -- Name of the priority class to be used by the Web UI Redis pods, priority class needs to be created beforehand
+      priorityClassName: ""
+
+      # -- additions labels on the pods
+      podLabels: {}
+      # -- additions annotations on the pods
+      podAnnotations: {}
+
+      # -- Enable the PVC for the redis pod
+      storageEnabled: true
+      # -- Size of the PVC for the redis pod
+      storageSize: "1Gi"
+      # -- Storage class of the PVC for the redis pod
+      storageClass: ""
+
+      service:
+        # -- The web UI Redis service type (i. e: LoadBalancer)
+        type: ClusterIP
+        # -- The web UI Redis service port dor the falcosidekick-ui
+        port: 6379
+        # -- The web UI Redis service targetPort
+        targetPort: 6379
+        # -- The web UI Redis service annotations (use this to set a internal LB, for example.)
+        annotations: {}
+
+      # -- Web UI Redis pod securityContext
+      podSecurityContext: {}
+
+      # -- Web UI Redis container securityContext
+      securityContext: {}
+
+      # -- The resources for the redis pod
+      resources: {}
+        # We usually recommend not to specify default resources and to leave this as a conscious
+        # choice for the user. This also increases chances charts run on environments with little
+        # resources, such as Minikube. If you do want to specify resources, uncomment the following
+        # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+        # limits:
+        #   cpu: 100m
+        #   memory: 128Mi
+        # requests:
+        #   cpu: 100m
+        #   memory: 128Mi
+
+      # -- Web UI Redis nodeSelector field
+      nodeSelector: {}
+
+      # -- Tolerations for pod assignment
+      tolerations: []
+
+      # -- Affinity for the Web UI Redis pods
+      affinity: {}
 
 ######################
 # falco.yaml config  #

@@ -1,0 +1,8 @@
+- name: Rule 0
+  match:
+    rules:
+      - Terminal shell in container
+  action:
+    name: kubernetes:terminate
+    parameters:
+      gracePeriodSeconds: 3
