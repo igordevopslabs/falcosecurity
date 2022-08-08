@@ -1,8 +1,8 @@
 - name: Rule 0
   match:
-    rules:
-      - Terminal shell in container
+    priority: "<Critical"
   action:
-    name: kubernetes:terminate
-    parameters:
-      gracePeriodSeconds: 3
+    name: kubernetes:labelize
+    arguments:
+      suspicious: "true"
+  continue: true

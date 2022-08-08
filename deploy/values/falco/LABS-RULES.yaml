@@ -1,0 +1,37 @@
+customRules:
+  custom-rules.yaml: |-
+    - rule: Events detected in /var/run/secrets dir
+      desc: Detected events in sensitive directory /var/run/secrets on administrative namespaces.
+      condition: admin_namespaces and spawned_process and container.id != host and proc.cmdline contains /var/run/secrets/
+      output: Possible extrafiltration ran inside a container (user=%user.name command=%proc.cmdline image=%container.image.repository)
+      priority: CRITICAL
+      tags: [k8s]
+
+    - macro: admin_namespaces
+      condition: k8s.ns.name in (privileged_namespaces)
+
+    - list: privileged_namespaces
+      items: [
+        "kube-system",
+        "kube-public",
+        "ambassador-ingress-internal",
+        "istio-system",
+        "keda",
+        "kiali-operator",
+        "default",
+        "monitoring",
+        "teleport-agent",
+        "trivy-system",
+        "ibm-connect-direct",
+        "falco-security",
+        "teste-nginx"
+      ]
+
+    - rule: Detect su or sudo
+      desc: detect sudo activities
+      condition:
+        spawned_process and proc.name in (sudo, su)
+      output: >
+        Detected sudo or su privilege escalation activity (user=%user.name command=%proc.cmdline %container.info)
+      priority: CRITICAL
+      tags: [process]
