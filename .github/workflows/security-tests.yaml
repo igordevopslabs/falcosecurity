@@ -1,7 +1,7 @@
 name: Security Validation
 
 on:
-  push:
+  pull_request:
     branches:
       - main
       - master
