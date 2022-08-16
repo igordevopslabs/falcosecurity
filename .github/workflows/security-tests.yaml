@@ -36,4 +36,4 @@ jobs:
       #application_name: falco-security
       #env: labs
       #helmfile_dir: deploy/helmfile.yaml
-    #secrets: inherit  
+    #secrets: inherit 
