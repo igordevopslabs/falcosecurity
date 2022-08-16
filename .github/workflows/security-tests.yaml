@@ -23,7 +23,7 @@ jobs:
 
   k8s-scan:
     needs: [security-fs]
-    uses: igordevopslabs/custom-workflows-actions/.github/workflows/trivy-k8s-scan.yml@main
+    uses: igordevopslabs/custom-workflows-actions/.github/workflows/k8s-security-scan.yml@main
     with:
       helmfile_dir: 'deploy/helmfile.yaml'
       env: 'labs'
@@ -36,4 +36,4 @@ jobs:
       #application_name: falco-security
       #env: labs
       #helmfile_dir: deploy/helmfile.yaml
-    #secrets: inherit 
+    #secrets: inherit
