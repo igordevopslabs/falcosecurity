@@ -31,6 +31,8 @@ jobs:
 
   security-iac:
     uses: igordevopslabs/custom-workflows-actions/.github/workflows/trivy-iac-scan.yml@main
+    with:
+      env: labs
     secrets: inherit
 
 
