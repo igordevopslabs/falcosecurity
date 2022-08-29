@@ -10,30 +10,30 @@ on:
       - main
       - master
 
+concurrency:
+  group: security-checks-${{ github.head_ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write
 
 jobs:
+  secret-scanning:
+    uses: igordevopslabs/custom-workflows-actions/.github/workflows/gitleaks-scan.yml@main
+    secrets: inherit
+
   security-fs:
     uses: igordevopslabs/custom-workflows-actions/.github/workflows/trivy-fs-scan.yml@main
     with:
       skipp_file: gitleaks-report.sarif
     secrets: inherit
 
-  k8s-scan:
-    needs: [security-fs]
-    uses: igordevopslabs/custom-workflows-actions/.github/workflows/k8s-security-scan.yml@main
+  security-iac:
+    uses: igordevopslabs/custom-workflows-actions/.github/workflows/trivy-iac-scan.yml@main
     with:
-      helmfile_dir: 'deploy/helmfile.yaml'
-      env: 'labs'
+      env: labs
     secrets: inherit
 
-  #helm-validate:
-    #needs: [security-fs, security-iac]
-    #uses: igordevopslabs/custom-workflows-actions/.github/workflows/helmchart-test.yml@main
-    #with:
-      #application_name: falco-security
-      #env: labs
-      #helmfile_dir: deploy/helmfile.yaml
-    #secrets: inherit
+
+
