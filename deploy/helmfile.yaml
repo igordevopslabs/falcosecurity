@@ -8,7 +8,6 @@ repositories:
 
 helmDefaults:
   createNamespace: true
-  tillerless: true
   wait: true
   timeout: 900
   atomic: true
