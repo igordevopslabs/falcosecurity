@@ -16,7 +16,7 @@ releases:
   - name: falco-security
     chart: falco/falco
     namespace: falco-security
-    version: "2.0.7"
+    version: "3.7.1"
     values: 
       - values/falco/values.yaml.gotmpl
     installed: true
@@ -45,4 +45,3 @@ environments:
   labs:
     values:
       - values/falco/LABS.yaml
-      - values/falco/LABS-RULES.yaml
